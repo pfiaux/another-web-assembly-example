@@ -1,0 +1,9 @@
+# MacOS junk
+.DS_Store
+
+# IDE stuff
+*.code-workspace
+
+# Go stuff
+*.out
+dist/
