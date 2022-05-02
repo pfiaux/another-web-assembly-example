@@ -17,7 +17,7 @@ func TestInitWrapper(t *testing.T) {
 		js.Global().Get("Uint8Array").New(len(testColorYAML)),
 	}
 	js.CopyBytesToJS(inputs[0], testColorYAML)
-	engine := buildEngine()
+	engine := Engine{}
 
 	initWrapper(&engine, inputs)
 
@@ -45,7 +45,7 @@ func TestHandleKeyEventWrapper(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		engine := buildEngine()
+		engine := Engine{}
 
 		handleKeyEventWrapper(&engine, tc.inputs)
 

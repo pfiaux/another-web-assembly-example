@@ -8,8 +8,7 @@ import (
 )
 
 type Engine struct {
-	color           HSLColor
-	shutdownChannel chan bool
+	color HSLColor
 }
 
 type KeyEvent struct {
@@ -22,11 +21,8 @@ type HSLColor struct {
 	Lightness  int `yaml:"lightness"`  // 0-100 (also sometimes called luminance)
 }
 
-func buildEngine() Engine {
-	return Engine{
-		shutdownChannel: make(chan bool),
-	}
-}
+// REVIEW: with the Engine{} now being useful with its zero value, there is
+// no longer a need for this function
 
 func (engine *Engine) loadConfig(config []byte) error {
 	err := yaml.Unmarshal(config, &engine.color)

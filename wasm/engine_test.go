@@ -9,7 +9,7 @@ import (
 func TestBuildEngine(t *testing.T) {
 	is := is.New(t)
 
-	engine := buildEngine()
+	engine := Engine{}
 
 	is.Equal(engine.color, HSLColor{0, 0, 0})
 }
@@ -35,7 +35,7 @@ lightness: 42`,
 	}
 
 	for _, tc := range testCases {
-		engine := buildEngine()
+		engine := Engine{}
 
 		err := engine.loadConfig([]byte(tc.config))
 
@@ -50,7 +50,7 @@ lightness: 42`,
 
 func TestGetJSObject(t *testing.T) {
 	is := is.New(t)
-	engine := buildEngine()
+	engine := Engine{}
 	engine.color = HSLColor{50, 90, 35}
 
 	jsFriendlyObject := engine.getJSObject()
@@ -84,7 +84,7 @@ func TestHandleKeyEvent(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		engine := buildEngine()
+		engine := Engine{}
 		engine.color = startColor
 
 		engine.handleKeyEvent(&tc.event)
