@@ -22,7 +22,7 @@ build: wasm-common
 wasm-common:
 	@echo "  >  BUILD WASM common"
 	@mkdir -p $(DISTDIR)
-	@cp -rf web/ $(DISTDIR)
+	@cp -rf web/* $(DISTDIR)
 	@go build -o "$(DISTDIR)/devserver" $(RELEASE) cmd/devserver/main.go
 	@cp -f "$(GOROOT)/misc/wasm/wasm_exec.js" $(DISTDIR)
 
