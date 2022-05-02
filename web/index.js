@@ -5,6 +5,8 @@
   const go = new Go();
   const colorContainer = document.getElementById("another-color");
 
+  // REVIEW: why do you pass `lib.wasm` as argument, when the resources
+  // are hard coded in `loadAllAssets?
   loadAllAssets('lib.wasm')
     .then(([anotherexample, config]) => {
       go.run(anotherexample.instance);
@@ -12,18 +14,19 @@
       initializeJSKeyEventListner();
       initializeJSButtonEventListners();
 
+      // here we call the Go/WASM code, that is registered as `parseConfig`.
       parseConfig(config);
 
       updateColor();
       setInterval(updateColor, updateIntervalMs);
     });
 
-    function loadAllAssets() {
-      return Promise.all([
-        loadGoWasm('lib.wasm'),
-        loadFileAsBytes(`/config.yaml`),
-      ]);
-    }
+  function loadAllAssets() {
+    return Promise.all([
+      loadGoWasm('lib.wasm'),
+      loadFileAsBytes(`/config.yaml`),
+    ]);
+  }
 
   function loadGoWasm(filename) {
     return fetch(filename)
@@ -53,6 +56,7 @@
     buttonID2KeyEventMappings.forEach(({id, key}) => {
       const keyButton = document.getElementById(id);
       keyButton.addEventListener('mousedown', (e) => {
+        // here we call the Go/WASM code, that is registered as `handleKeyEvent`.
         handleKeyEvent(key);
       });
     });
@@ -62,10 +66,12 @@
     if (event.repeat || event.type != 'keydown') {
       return; //Ignore repeat, and keyup
     }
+    // here we call the Go/WASM code, that is registered as `handleKeyEvent`.
     handleKeyEvent(event.key);
   }
 
   function updateColor() {
+    // getColor is the Go/WASM function, that returns the color
     const newColor = getColor();
     const colorForCSS = `hsl(${newColor.hue}, 50%, 50%)`;
     console.log("Updating color...", colorForCSS);
