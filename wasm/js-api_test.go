@@ -25,30 +25,38 @@ func TestInitWrapper(t *testing.T) {
 }
 
 func TestHandleKeyEventWrapper(t *testing.T) {
-	is := is.New(t)
 	testCases := []struct {
+		name          string
 		inputs        []js.Value
 		expectedColor HSLColor
 	}{
 		{
-			inputs:        []js.Value{}, // Empty input is ignored
+			name:          "Empty input is ignored",
+			inputs:        []js.Value{},
 			expectedColor: HSLColor{0, 0, 0},
 		},
 		{
-			inputs:        []js.Value{js.ValueOf(42)}, // Invalid input type is ignored
+			name:          "Invalid input type is ignored",
+			inputs:        []js.Value{js.ValueOf(42)},
 			expectedColor: HSLColor{0, 0, 0},
 		},
 		{
+			name:          "valid input",
 			inputs:        []js.Value{js.ValueOf("ArrowUp")},
 			expectedColor: HSLColor{10, 0, 0},
 		},
 	}
 
 	for _, tc := range testCases {
-		engine := Engine{}
+		// REVIEW: I would run each case as its own sub-test.
+		t.Run(tc.name, func(t *testing.T) {
+			is := is.New(t)
 
-		handleKeyEventWrapper(&engine, tc.inputs)
+			engine := Engine{}
 
-		is.Equal(engine.color, tc.expectedColor)
+			handleKeyEventWrapper(&engine, tc.inputs)
+
+			is.Equal(engine.color, tc.expectedColor)
+		})
 	}
 }
