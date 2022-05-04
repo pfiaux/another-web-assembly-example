@@ -60,3 +60,18 @@ func TestHandleKeyEventWrapper(t *testing.T) {
 		})
 	}
 }
+
+func TestGetColorForJS(t *testing.T) {
+	is := is.New(t)
+	engine := &Engine{
+		color: HSLColor{50, 90, 35},
+	}
+
+	jsFriendlyObject := getColorForJS(engine)
+
+	is.Equal(jsFriendlyObject, map[string]interface{}{
+		"hue":        50,
+		"saturation": 90,
+		"lightness":  35,
+	})
+}

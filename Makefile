@@ -9,7 +9,7 @@ GOROOT := $(shell go env GOROOT)
 RELEASE := -ldflags "-s -w -X project.name=anotherwebasembly"
 DISTDIR := ./dist
 
-## serve: runs a devserver so the UI is accessible at http://localhost:8080/
+## serve: runs a devserver so the UI is accessible on localhost at port 8080
 serve: wasm-common
 	$(DISTDIR)/devserver -dir $(DISTDIR)
 

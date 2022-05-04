@@ -9,8 +9,7 @@ func main() {
 	engine := Engine{}
 	RegisterCallbacks(&engine)
 	log.Print("Registered Callbacks")
-	// REVIEW: In my opinion, this channel should not be part of the engine,
-	// because the purpose is just to make sure, that the main function does not
-	// end. Therefore you could create this channel right here
+	// The channel makes sure that the main function does not end
+	// and keeps the application running.
 	<-make(chan struct{})
 }

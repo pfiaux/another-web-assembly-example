@@ -37,7 +37,6 @@ lightness: 42`,
 	}
 
 	for _, tc := range testCases {
-		// REVIEW: I would run each case as its own sub-test.
 		t.Run(tc.name, func(t *testing.T) {
 			is := is.New(t)
 
@@ -53,21 +52,6 @@ lightness: 42`,
 			}
 		})
 	}
-}
-
-func TestGetJSObject(t *testing.T) {
-	is := is.New(t)
-	engine := Engine{
-		color: HSLColor{50, 90, 35},
-	}
-
-	jsFriendlyObject := engine.getJSObject()
-
-	is.Equal(jsFriendlyObject, map[string]interface{}{
-		"hue":        50,
-		"saturation": 90,
-		"lightness":  35,
-	})
 }
 
 func TestHandleKeyEvent(t *testing.T) {
@@ -95,7 +79,6 @@ func TestHandleKeyEvent(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		// REVIEW: I would run each case as its own sub-test.
 		t.Run(tc.name, func(t *testing.T) {
 			is := is.New(t)
 

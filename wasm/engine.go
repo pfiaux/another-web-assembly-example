@@ -21,9 +21,6 @@ type HSLColor struct {
 	Lightness  int `yaml:"lightness"`  // 0-100 (also sometimes called luminance)
 }
 
-// REVIEW: with the Engine{} now being useful with its zero value, there is
-// no longer a need for this function
-
 func (engine *Engine) loadConfig(config []byte) error {
 	err := yaml.Unmarshal(config, &engine.color)
 	if err != nil {
@@ -45,13 +42,5 @@ func (engine *Engine) handleKeyEvent(event *KeyEvent) {
 			engine.color.Hue -= 10
 		}
 		log.Printf("engine: color updated %v", engine.color)
-	}
-}
-
-func (engine *Engine) getJSObject() map[string]interface{} {
-	return map[string]interface{}{
-		"hue":        engine.color.Hue,
-		"saturation": engine.color.Saturation,
-		"lightness":  engine.color.Lightness,
 	}
 }

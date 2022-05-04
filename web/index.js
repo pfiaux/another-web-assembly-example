@@ -5,17 +5,14 @@
   const go = new Go();
   const colorContainer = document.getElementById("another-color");
 
-  // REVIEW: why do you pass `lib.wasm` as argument, when the resources
-  // are hard coded in `loadAllAssets?
-  loadAllAssets('lib.wasm')
+  loadAllAssets()
     .then(([anotherexample, config]) => {
       go.run(anotherexample.instance);
 
       initializeJSKeyEventListner();
       initializeJSButtonEventListners();
 
-      // here we call the Go/WASM code, that is registered as `parseConfig`.
-      parseConfig(config);
+      wasmParseConfig(config);
 
       updateColor();
       setInterval(updateColor, updateIntervalMs);
@@ -42,8 +39,9 @@
   }
 
   function initializeJSKeyEventListner() {
-    document.addEventListener('keydown', forwardKeyEvent2Wasm);
-    document.addEventListener('keyup', forwardKeyEvent2Wasm);
+    document.addEventListener('keyup', (event) => {
+      wasmHandleKeyEvent(event.key)
+    });
   }
 
   function initializeJSButtonEventListners() {
@@ -56,24 +54,14 @@
     buttonID2KeyEventMappings.forEach(({id, key}) => {
       const keyButton = document.getElementById(id);
       keyButton.addEventListener('mousedown', (e) => {
-        // here we call the Go/WASM code, that is registered as `handleKeyEvent`.
-        handleKeyEvent(key);
+        wasmHandleKeyEvent(key);
       });
     });
   }
 
-  function forwardKeyEvent2Wasm(event) {
-    if (event.repeat || event.type != 'keydown') {
-      return; //Ignore repeat, and keyup
-    }
-    // here we call the Go/WASM code, that is registered as `handleKeyEvent`.
-    handleKeyEvent(event.key);
-  }
-
   function updateColor() {
-    // getColor is the Go/WASM function, that returns the color
-    const newColor = getColor();
-    const colorForCSS = `hsl(${newColor.hue}, 50%, 50%)`;
+    const newColor = wasmGetColor();
+    const colorForCSS = `hsl(${newColor.hue}, ${newColor.saturation}%, ${newColor.lightness}%)`;
     console.log("Updating color...", colorForCSS);
     colorContainer.style.background = colorForCSS;
   }
