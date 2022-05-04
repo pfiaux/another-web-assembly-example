@@ -5,25 +5,25 @@
   const go = new Go();
   const colorContainer = document.getElementById("another-color");
 
-  loadAllAssets('lib.wasm')
+  loadAllAssets()
     .then(([anotherexample, config]) => {
       go.run(anotherexample.instance);
 
       initializeJSKeyEventListner();
       initializeJSButtonEventListners();
 
-      parseConfig(config);
+      wasmParseConfig(config);
 
       updateColor();
       setInterval(updateColor, updateIntervalMs);
     });
 
-    function loadAllAssets() {
-      return Promise.all([
-        loadGoWasm('lib.wasm'),
-        loadFileAsBytes(`/config.yaml`),
-      ]);
-    }
+  function loadAllAssets() {
+    return Promise.all([
+      loadGoWasm('lib.wasm'),
+      loadFileAsBytes(`/config.yaml`),
+    ]);
+  }
 
   function loadGoWasm(filename) {
     return fetch(filename)
@@ -39,8 +39,9 @@
   }
 
   function initializeJSKeyEventListner() {
-    document.addEventListener('keydown', forwardKeyEvent2Wasm);
-    document.addEventListener('keyup', forwardKeyEvent2Wasm);
+    document.addEventListener('keyup', (event) => {
+      wasmHandleKeyEvent(event.key)
+    });
   }
 
   function initializeJSButtonEventListners() {
@@ -53,21 +54,14 @@
     buttonID2KeyEventMappings.forEach(({id, key}) => {
       const keyButton = document.getElementById(id);
       keyButton.addEventListener('mousedown', (e) => {
-        handleKeyEvent(key);
+        wasmHandleKeyEvent(key);
       });
     });
   }
 
-  function forwardKeyEvent2Wasm(event) {
-    if (event.repeat || event.type != 'keydown') {
-      return; //Ignore repeat, and keyup
-    }
-    handleKeyEvent(event.key);
-  }
-
   function updateColor() {
-    const newColor = getColor();
-    const colorForCSS = `hsl(${newColor.hue}, 50%, 50%)`;
+    const newColor = wasmGetColor();
+    const colorForCSS = `hsl(${newColor.hue}, ${newColor.saturation}%, ${newColor.lightness}%)`;
     console.log("Updating color...", colorForCSS);
     colorContainer.style.background = colorForCSS;
   }

@@ -9,7 +9,7 @@ GOROOT := $(shell go env GOROOT)
 RELEASE := -ldflags "-s -w -X project.name=anotherwebasembly"
 DISTDIR := ./dist
 
-## serve: runs a devserver so the UI is accessible at http://localhost:8080/
+## serve: runs a devserver so the UI is accessible on localhost at port 8080
 serve: wasm-common
 	$(DISTDIR)/devserver -dir $(DISTDIR)
 
@@ -22,7 +22,7 @@ build: wasm-common
 wasm-common:
 	@echo "  >  BUILD WASM common"
 	@mkdir -p $(DISTDIR)
-	@cp -rf web/ $(DISTDIR)
+	@cp -rf web/* $(DISTDIR)
 	@go build -o "$(DISTDIR)/devserver" $(RELEASE) cmd/devserver/main.go
 	@cp -f "$(GOROOT)/misc/wasm/wasm_exec.js" $(DISTDIR)
 

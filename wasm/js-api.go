@@ -6,19 +6,19 @@ import (
 )
 
 func RegisterCallbacks(engine *Engine) {
-	js.Global().Set("parseConfig", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
+	js.Global().Set("wasmParseConfig", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
 		initWrapper(engine, inputs)
 		return nil
 	}))
 
-	js.Global().Set("handleKeyEvent", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
+	js.Global().Set("wasmHandleKeyEvent", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
 		handleKeyEventWrapper(engine, inputs)
 		return nil
 	}))
 
-	js.Global().Set("getColor", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
+	js.Global().Set("wasmGetColor", js.FuncOf(func(this js.Value, inputs []js.Value) interface{} {
 		log.Print("js-api: Returning the color...")
-		return engine.getJSObject()
+		return getColorForJS(engine)
 	}))
 }
 
@@ -55,6 +55,14 @@ func handleKeyEventWrapper(engine *Engine, inputs []js.Value) {
 	}
 	log.Printf("js-api: forwarding key event... %v", event)
 	engine.handleKeyEvent(&event)
+}
+
+func getColorForJS(engine *Engine) map[string]interface{} {
+	return map[string]interface{}{
+		"hue":        engine.color.Hue,
+		"saturation": engine.color.Saturation,
+		"lightness":  engine.color.Lightness,
+	}
 }
 
 func copyBytesFromJS(input js.Value) []byte {

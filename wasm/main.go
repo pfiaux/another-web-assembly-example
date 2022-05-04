@@ -6,8 +6,10 @@ import (
 
 func main() {
 	log.Print("WASM example initializing...")
-	engine := buildEngine()
+	engine := Engine{}
 	RegisterCallbacks(&engine)
 	log.Print("Registered Callbacks")
-	<-engine.shutdownChannel
+	// The channel makes sure that the main function does not end
+	// and keeps the application running.
+	<-make(chan struct{})
 }
